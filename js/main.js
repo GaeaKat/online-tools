@@ -34,7 +34,7 @@
         if (type === 'hex') {
           val = hexToString(val);
         }
-        output.val(method(val, option.val()));
+        output.val(method(method(val, option.val())));
       } catch(e) {
         output.val(e);
       }
