@@ -46,6 +46,14 @@ export async function hash_sha256d(data:Uint8Array) {
     return await hash(new Uint8Array(hexToData(await hash(data))));
 }
 
+export function stupid_4byte_swap(hex:string) {
+    let newString="";
+    for(let i=0;i<8;i++) {
+        const section=hex.substr(i*8,8);
+        newString+=flipHex(section);
+    }
+    return newString;
+}
 export function buf2hex(buffer: ArrayBuffer) { // buffer is an ArrayBuffer
     return [...new Uint8Array(buffer)]
         .map(x => x.toString(16).padStart(2, '0'))
