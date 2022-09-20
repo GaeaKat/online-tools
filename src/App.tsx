@@ -21,7 +21,14 @@ import {
 import EnhancedEncryptionIcon from '@mui/icons-material/EnhancedEncryption';
 import MenuIcon from '@mui/icons-material/Menu';
 import HomeIcon from '@mui/icons-material/Home';
+import ConstructionIcon from '@mui/icons-material/Construction';
 import {Home} from "./pages/Home";
+import Construct from "./pages/Construct";
+
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
 
 
 const drawerWidth = 240;
@@ -51,6 +58,14 @@ function App() {
                             <EnhancedEncryptionIcon/>
                         </ListItemIcon>
                         <ListItemText primary="Sha256d" />
+                    </ListItemButton>
+                </ListItem>
+                <ListItem>
+                    <ListItemButton component={Link} to={"/construct_basic"}>
+                        <ListItemIcon>
+                            <ConstructionIcon/>
+                        </ListItemIcon>
+                        <ListItemText primary="Basic Construct" />
                     </ListItemButton>
                 </ListItem>
             </List>
@@ -125,6 +140,7 @@ function App() {
                 <Routes>
                     <Route path={"/"} element={<Home />} />
                     <Route path={"/sha256d"} element={<Sha256d />} />
+                    <Route path={"/construct_basic"} element={<Construct/>} />
                 </Routes>
             </Box>
         </Router>
