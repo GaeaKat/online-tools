@@ -115,20 +115,20 @@ useEffect(()=> {
                 <p>
                     <TextField label="nBits" variant="standard" value={nBits} onChange={(event) => setNBits(event.target.value)}/>
                 </p>
-                <p>
-                    <TextField label="nTime" variant="standard" value={nTime} onChange={(event) => setNTime(event.target.value)}/>
-                </p>
             </Paper>
             <Paper elevation={3}>
                 <Typography variant="h6" gutterBottom>mining.submit</Typography>
-                <p>
-                    <TextField label="Nonce" variant="standard" value={nonce} onChange={(event) => setNonce(event.target.value)}/>
-                </p>
                 <p>
                     <TextField label="Extra Nonce 2" variant="standard" value={extraNonce2} onChange={(event) => setExtraNonce2(event.target.value)}/>
                     <Button variant="contained" onClick={()=> {
                         setExtraNonce2(getRandomExtraNonce2(extraNonce2Size));
                     }} >Randomize</Button>
+                </p>
+                <p>
+                    <TextField label="nTime" variant="standard" value={nTime} onChange={(event) => setNTime(event.target.value)}/>
+                </p>
+                <p>
+                    <TextField label="Nonce" variant="standard" value={nonce} onChange={(event) => setNonce(event.target.value)}/>
                 </p>
             </Paper>
             <Paper elevation={3}>
