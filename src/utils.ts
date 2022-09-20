@@ -28,3 +28,29 @@ export function hash(data:Uint8Array) {
 export async function hash_sha256d(data:Uint8Array) {
     return await hash(new Uint8Array(hexToData(await hash(data))));
 }
+
+export function buf2hex(buffer: ArrayBuffer) { // buffer is an ArrayBuffer
+    return [...new Uint8Array(buffer)]
+        .map(x => x.toString(16).padStart(2, '0'))
+        .join('');
+}
+
+export function getRandomExtraNonce2(length: number) {
+    if (length <=0)
+        return "";
+    let randArray= new Uint8Array(length);
+    console.log('Length:',length);
+    console.log('Rand array length 1',randArray.length);
+    crypto.getRandomValues(randArray);
+    console.log('Rand array ',randArray);
+    console.log('Rand array length 2',randArray.length);
+    return buf2hex(randArray.buffer);
+}
+
+export async function calculateRoot(merkleTree: Array<string>,coinbase:string) {
+    if(merkleTree.length==0)
+        return coinbase;
+    return await merkleTree.reduce(async (previousValue, currentValue) => {
+        return await hash_sha256d(new Uint8Array(hexToData(await previousValue + currentValue)))
+    },Promise.resolve(coinbase));
+}
