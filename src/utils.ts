@@ -15,6 +15,23 @@ export function hexToData(hex:string) {
     return bytes;
 }
 
+export function flipHex(hex:string) {
+
+    if (hex.length % 2 === 0 && hex.length > 0) {
+        const match=hex.match(/[a-fA-F0-9]{2}/g);
+        if(match!==null)
+        {
+            return match.reverse().join('');
+        }
+        else {
+            return "";
+        }
+    } else {
+        return "";
+    }
+
+}
+
 export function hash(data:Uint8Array) {
     return crypto.subtle.digest('SHA-256', data).then((hashBuffer) => {
         const hashArray = Array.from(new Uint8Array(hashBuffer));
