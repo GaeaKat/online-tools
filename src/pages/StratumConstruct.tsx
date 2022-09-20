@@ -1,4 +1,4 @@
-import {Button, Card, Paper, TextField, Typography} from "@mui/material";
+import {Button,  Paper, TextField, Typography} from "@mui/material";
 import React, {useEffect, useState} from "react";
 import {calculateRoot, getRandomExtraNonce2, hash_sha256d, hexToData} from "../utils";
 
@@ -28,7 +28,7 @@ export function StratumConstruct() {
             }
         }
         tmp();
-    },[coinb1,extraNonce2,coinb2]);
+    },[coinb1,extraNonce2,coinb2, extraNonce1]);
 
     useEffect(()=> {
         async function tmp(){
@@ -41,7 +41,7 @@ export function StratumConstruct() {
             }
         }
         tmp();
-    },[coinbase,merkleTree]);
+    },[coinbaseHash,merkleTree]);
 
 
     return (
