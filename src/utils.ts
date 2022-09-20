@@ -47,6 +47,10 @@ export function getRandomExtraNonce2(length: number) {
     return buf2hex(randArray.buffer);
 }
 
-export async function calculateRoot(merkleTree: Array<string>,coinb1:string,extranonce2:string,coinb2:string) {
-
+export async function calculateRoot(merkleTree: Array<string>,coinbase:string) {
+    if(merkleTree.length==0)
+        return coinbase;
+    return await merkleTree.reduce(async (previousValue, currentValue) => {
+        return await hash_sha256d(new Uint8Array(hexToData(await previousValue + currentValue)))
+    },Promise.resolve(coinbase));
 }

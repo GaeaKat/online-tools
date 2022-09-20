@@ -1,6 +1,6 @@
 import {Button, Card, Paper, TextField, Typography} from "@mui/material";
 import React, {useEffect, useState} from "react";
-import {getRandomExtraNonce2} from "../utils";
+import {calculateRoot, getRandomExtraNonce2, hash_sha256d, hexToData} from "../utils";
 
 export function StratumConstruct() {
     const [extraNonce1, setExtraNonce] = useState<string>("");
@@ -14,10 +14,35 @@ export function StratumConstruct() {
     const [nBits,setNBits] = useState<string>("");
     const [nTime,setNTime] = useState<string>("");
     const [extraNonce2,setExtraNonce2] = useState<string>("");
+    const [coinbase,setCoinbase] = useState<string>("");
+    const [coinbaseHash,setCoinbaseHash] = useState<string>("");
+    const [merkleRoot,setMerkleRoot] = useState<string>("");
+    useEffect(()=> {
+        async function tmp() {
+            const coinbaseTmp=coinb1+extraNonce1+extraNonce2+coinb2;
+            setCoinbase(coinbaseTmp);
+            try {
+                setCoinbaseHash(await hash_sha256d(new Uint8Array(hexToData(coinbaseTmp))));
+            } catch (e) {
+                setCoinbaseHash((e as Error).toString());
+            }
+        }
+        tmp();
+    },[coinb1,extraNonce2,coinb2]);
 
-    useEffect(() => {
-        setExtraNonce2(getRandomExtraNonce2(extraNonce2Size));
-    }, [extraNonce2Size]);
+    useEffect(()=> {
+        async function tmp(){
+            try {
+                const setval=await calculateRoot(merkleTree,coinbaseHash);
+                console.log('setval',setval);
+                setMerkleRoot(setval);
+            } catch (e) {
+                setMerkleRoot((e as Error).toString());
+            }
+        }
+        tmp();
+    },[coinbase,merkleTree]);
+
 
     return (
         <Paper>
@@ -79,7 +104,24 @@ export function StratumConstruct() {
             </Paper>
             <Paper elevation={3}>
                 <Typography variant="h6" gutterBottom>Miner Initial Workstring</Typography>
-                <Typography>Extra Nonce2: {extraNonce2}</Typography>
+                <p>
+                        <TextField label="Extra Nonce 2" variant="standard" value={extraNonce2} onChange={(event) => setExtraNonce2(event.target.value)}/>
+                    <Button variant="contained" onClick={()=> {
+                        setExtraNonce2(getRandomExtraNonce2(extraNonce2Size));
+                    }} >Randomize</Button>
+                </p>
+            <p>
+                <Typography>
+                    Coinbase: {coinbase} </Typography>
+            </p>
+                <p>
+                    <Typography>
+                    Coinbase Hash: {coinbaseHash}</Typography>
+                </p>
+                        <p>
+                            <Typography>
+                    Merkle Root: {merkleRoot}</Typography>
+                        </p>
             </Paper>
         </Paper>
     )
