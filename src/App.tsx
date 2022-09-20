@@ -29,6 +29,7 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
+import {StratumConstruct} from "./pages/StratumConstruct";
 
 
 const drawerWidth = 240;
@@ -66,6 +67,15 @@ function App() {
                             <ConstructionIcon/>
                         </ListItemIcon>
                         <ListItemText primary="Basic Construct" />
+                    </ListItemButton>
+                </ListItem>
+                <Divider />
+                <ListItem>
+                    <ListItemButton component={Link} to={"/construct_stratum"}>
+                        <ListItemIcon>
+                            <ConstructionIcon/>
+                        </ListItemIcon>
+                        <ListItemText primary="Stratum Construct" />
                     </ListItemButton>
                 </ListItem>
             </List>
@@ -141,6 +151,7 @@ function App() {
                     <Route path={"/"} element={<Home />} />
                     <Route path={"/sha256d"} element={<Sha256d />} />
                     <Route path={"/construct_basic"} element={<Construct/>} />
+                    <Route path={"/construct_stratum"} element={<StratumConstruct/>} />
                 </Routes>
             </Box>
         </Router>
