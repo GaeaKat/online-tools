@@ -1,6 +1,6 @@
 import {Button,  Paper, TextField, Typography} from "@mui/material";
 import React, {useEffect, useState} from "react";
-import {calculateRoot, flipHex, getRandomExtraNonce2, hash_sha256d, hexToData} from "../utils";
+import {calculateRoot, flipHex, getRandomExtraNonce2, hash_sha256d, hexToData, stupid_4byte_swap} from "../utils";
 
 export function StratumConstruct() {
     const [extraNonce1, setExtraNonce] = useState<string>("");
@@ -49,7 +49,7 @@ export function StratumConstruct() {
 useEffect(()=> {
     async function tmp() {
         try {
-            const tempWorkstring=flipHex(version)+prevHash+merkleRoot+flipHex(nTime)+flipHex(nBits)+flipHex(nonce);
+            const tempWorkstring=flipHex(version)+stupid_4byte_swap(prevHash)+merkleRoot+flipHex(nTime)+flipHex(nBits)+flipHex(nonce);
             setWorkstring(tempWorkstring);
             const tempHash=await hash_sha256d(new Uint8Array(hexToData(tempWorkstring)));
             setHash(tempHash);
