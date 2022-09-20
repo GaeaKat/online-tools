@@ -33,7 +33,7 @@ function App() {
 
     useEffect(() => {
         async function tmp() {
-            if(input!="") {
+            if(input!=="") {
                 try {
                     setSha(await hash(new Uint8Array(hexToData(await hash(new Uint8Array(hexToData(input)))))));
                 } catch (e) {
