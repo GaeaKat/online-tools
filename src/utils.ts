@@ -48,7 +48,7 @@ export function getRandomExtraNonce2(length: number) {
 }
 
 export async function calculateRoot(merkleTree: Array<string>,coinbase:string) {
-    if(merkleTree.length==0)
+    if(merkleTree.length===0)
         return coinbase;
     return await merkleTree.reduce(async (previousValue, currentValue) => {
         return await hash_sha256d(new Uint8Array(hexToData(await previousValue + currentValue)))
