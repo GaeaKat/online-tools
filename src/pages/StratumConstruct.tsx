@@ -1,6 +1,6 @@
 import {Button,  Paper, TextField, Typography} from "@mui/material";
 import React, {useEffect, useState} from "react";
-import {calculateRoot, getRandomExtraNonce2, hash_sha256d, hexToData} from "../utils";
+import {calculateRoot, flipHex, getRandomExtraNonce2, hash_sha256d, hexToData} from "../utils";
 
 export function StratumConstruct() {
     const [extraNonce1, setExtraNonce] = useState<string>("");
@@ -17,6 +17,10 @@ export function StratumConstruct() {
     const [coinbase,setCoinbase] = useState<string>("");
     const [coinbaseHash,setCoinbaseHash] = useState<string>("");
     const [merkleRoot,setMerkleRoot] = useState<string>("");
+    const [nonce,setNonce] = useState<string>("");
+    const [workstring, setWorkstring]=useState<string>("");
+    const [hash, setHash]=useState<string>("");
+
     useEffect(()=> {
         async function tmp() {
             const coinbaseTmp=coinb1+extraNonce1+extraNonce2+coinb2;
@@ -34,7 +38,6 @@ export function StratumConstruct() {
         async function tmp(){
             try {
                 const setval=await calculateRoot(merkleTree,coinbaseHash);
-                console.log('setval',setval);
                 setMerkleRoot(setval);
             } catch (e) {
                 setMerkleRoot((e as Error).toString());
@@ -42,6 +45,20 @@ export function StratumConstruct() {
         }
         tmp();
     },[coinbaseHash,merkleTree]);
+
+useEffect(()=> {
+    async function tmp() {
+        try {
+            const tempWorkstring=flipHex(version)+prevHash+merkleRoot+flipHex(nTime)+flipHex(nBits)+flipHex(nonce);
+            setWorkstring(tempWorkstring);
+            const tempHash=await hash_sha256d(new Uint8Array(hexToData(tempWorkstring)));
+            setHash(tempHash);
+        } catch (e) {
+            setWorkstring((e as Error).toString());
+        }
+    }
+    tmp();
+},[version,prevHash,merkleRoot,nTime,nBits,nonce]);
 
 
     return (
@@ -70,10 +87,10 @@ export function StratumConstruct() {
                     <TextField label="Previous Hash ID" variant="standard" value={prevHash} onChange={(event) => setPrevHash(event.target.value)} fullWidth/>
                 </p>
                 <p>
-                    <TextField label="Coinbase Part 1" variant="standard" value={coinb1} onChange={(event) => setCoinb1(event.target.value)}/>
+                    <TextField label="Coinbase Part 1" variant="standard" value={coinb1} onChange={(event) => setCoinb1(event.target.value)} fullWidth/>
                 </p>
                 <p>
-                    <TextField label="Coinbase Part 2" variant="standard" value={coinb2} onChange={(event) => setCoinb2(event.target.value)}/>
+                    <TextField label="Coinbase Part 2" variant="standard" value={coinb2} onChange={(event) => setCoinb2(event.target.value)} fullWidth/>
                 </p>
                 <p>
                     <Button variant="contained" onClick={()=> {setMerkleTree((prevState)=>[...prevState,""])}}>Add Merkle</Button>
@@ -103,14 +120,20 @@ export function StratumConstruct() {
                 </p>
             </Paper>
             <Paper elevation={3}>
-                <Typography variant="h6" gutterBottom>Miner Initial Workstring</Typography>
+                <Typography variant="h6" gutterBottom>mining.submit</Typography>
                 <p>
-                        <TextField label="Extra Nonce 2" variant="standard" value={extraNonce2} onChange={(event) => setExtraNonce2(event.target.value)}/>
+                    <TextField label="Nonce" variant="standard" value={nonce} onChange={(event) => setNonce(event.target.value)}/>
+                </p>
+                <p>
+                    <TextField label="Extra Nonce 2" variant="standard" value={extraNonce2} onChange={(event) => setExtraNonce2(event.target.value)}/>
                     <Button variant="contained" onClick={()=> {
                         setExtraNonce2(getRandomExtraNonce2(extraNonce2Size));
                     }} >Randomize</Button>
                 </p>
-            <p>
+            </Paper>
+            <Paper elevation={3}>
+                <p>
+                <Typography variant="h6" gutterBottom>Miner Initial Workstring</Typography>
                 <Typography>
                     Coinbase: {coinbase} </Typography>
             </p>
@@ -122,6 +145,19 @@ export function StratumConstruct() {
                             <Typography>
                     Merkle Root: {merkleRoot}</Typography>
                         </p>
+
+                <p>
+                    <Typography style={{
+                        overflowWrap: "break-word"
+                    }}>
+                        Workstring: {workstring}</Typography>
+                </p>
+                <p>
+                    <Typography style={{
+                        overflowWrap: "break-word"
+                    }}>
+                        Hash: {hash}</Typography>
+                </p>
             </Paper>
         </Paper>
     )
